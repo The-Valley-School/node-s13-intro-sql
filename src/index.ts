@@ -11,11 +11,14 @@ import {
 
 import express from "express";
 import cors from "cors";
-import { connect } from "./db";
+import { mongoConnect } from "./databases/mongo-db";
+import { sqlConnect } from "./databases/sql-db";
+import { languagesRouter } from "./routes/languages.routes";
 
 const main = async (): Promise<void> => {
   // Conexión a la BBDD
-  const database = await connect();
+  const mongoDatabase = await mongoConnect();
+  const sqlDatabase = await sqlConnect();
 
   // Configuración del server
   const PORT = 3000;
@@ -31,7 +34,11 @@ const main = async (): Promise<void> => {
   // Rutas
   const router = express.Router();
   router.get("/", (req: Request, res: Response) => {
-    res.send(`Esta es la RAIZ de nuestra API. Estamos utilizando la BBDD de ${database?.connection?.name as string} `);
+    res.send(`
+      <h3>Esta es la RAIZ de nuestra API.</h3>
+      <p>Estamos usando la BBDD Mongo de ${mongoDatabase?.connection?.name as string}</p>
+      <p>Estamos usando la BBDD SQL ${sqlDatabase?.config?.database as string} del host ${sqlDatabase?.config?.host as string}</p>
+    `);
   });
   router.get("*", (req: Request, res: Response) => {
     res.status(404).send("Lo sentimos :( No hemos encontrado la página solicitada.");
@@ -48,6 +55,7 @@ const main = async (): Promise<void> => {
   app.use("/user", userRouter);
   app.use("/car", carRouter);
   app.use("/brand", brandRouter);
+  app.use("/languages", languagesRouter);
   app.use("/public", express.static("public"));
   app.use("/", router);
 
