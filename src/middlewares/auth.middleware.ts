@@ -1,5 +1,5 @@
 import { type NextFunction, type Response } from "express";
-import { User } from "../models/User";
+import { User } from "../models/mongo/User";
 import { verifyToken } from "../utils/token";
 
 export const isAuth = async (req: any, res: Response, next: NextFunction): Promise<null> => {

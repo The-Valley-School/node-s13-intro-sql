@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 // import { generateToken } from "../utils/token";
 
 // Modelos
-import { User } from "../models/User";
-import { Car } from "../models/Car";
+import { User } from "../models/mongo/User";
+import { Car } from "../models/mongo/Car";
 import { generateToken } from "../utils/token";
 import { isAuth } from "../middlewares/auth.middleware";
 // import { isAuth } from "../middlewares/auth.middleware";

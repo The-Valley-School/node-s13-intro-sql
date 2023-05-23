@@ -3,7 +3,7 @@ import fs from "fs";
 import multer from "multer";
 
 // Modelos
-import { Brand } from "../models/Brand";
+import { Brand } from "../models/mongo/Brand";
 const upload = multer({ dest: "public" });
 
 export const brandRouter = express.Router();
