@@ -43,10 +43,13 @@ languagesRouter.post("/", async (req: Request, res: Response, next: NextFunction
   try {
     const { name, releasedYear, githutRank, pyplRank, tiobeRank } = req.body as ProgrammingLanguageBody;
 
-    const result = await sqlQuery(`
+    const query: string = `
       INSERT INTO programming_languages (name, released_year, githut_rank, pypl_rank, tiobe_rank)
-      VALUES ("${name}", ${releasedYear}, ${githutRank}, ${pyplRank}, ${tiobeRank})
-    `);
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    const params = [name, releasedYear, githutRank, pyplRank, tiobeRank];
+
+    const result = await sqlQuery(query, params);
 
     if (result) {
       return res.status(201).json({});
@@ -79,11 +82,13 @@ languagesRouter.put("/:id", async (req: Request, res: Response, next: NextFuncti
     const id = req.params.id;
     const { name, releasedYear, githutRank, pyplRank, tiobeRank } = req.body as ProgrammingLanguageBody;
 
-    await sqlQuery(`
+    const query = `
       UPDATE programming_languages
-      SET name = "${name}", released_year = ${releasedYear}, githut_rank = ${githutRank}, pypl_rank = ${pyplRank}, tiobe_rank = ${tiobeRank}
-      WHERE id = ${id}
-    `);
+      SET name = ?, released_year = ?, githut_rank = ?, pypl_rank = ?, tiobe_rank = ?
+      WHERE id = ?
+    `;
+    const params = [name, releasedYear, githutRank, pyplRank, tiobeRank, id];
+    await sqlQuery(query, params);
 
     const rows = await sqlQuery(`
       SELECT *
